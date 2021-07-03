@@ -3,8 +3,9 @@ import { useState } from 'react';
 function App() {
   const [calc, setCalc] = useState('');
   const [result, setResult] = useState('');
+  const [isDecimalAdded, setDecimal] = useState(false);
 
-  const ops = ['/', '*', '-', '+', '.'];
+  const ops = ['/', '*', '-', '+'];
 
   const updateCalc = (val) => {
     if (
@@ -14,10 +15,18 @@ function App() {
       return;
     }
 
+    if (!isDecimalAdded && val === '.') {
+      setDecimal(true);
+    } else if (isDecimalAdded && val === '.') {
+      return;
+    }
+
     setCalc(calc + val);
 
     if (!ops.includes(val)) {
       setResult(eval(calc + val).toString());
+    } else {
+      setDecimal(false);
     }
   };
 
@@ -48,7 +57,7 @@ function App() {
     <div className='App'>
       <div className='calculator'>
         <div className='display'>
-          {result ? <span>({result})</span> : '0'} {calc || '0'}
+          {result ? <span>({result})</span> : <span>(0)</span>} {calc || '0'}
         </div>
         <div className='operators'>
           <button onClick={() => updateCalc('/')}>/</button>
